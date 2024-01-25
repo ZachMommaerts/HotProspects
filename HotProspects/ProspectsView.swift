@@ -16,6 +16,7 @@ struct ProspectsView: View {
     
     @EnvironmentObject var prospects: Prospects
     @State private var isShowingScanner = false
+    @State private var showingFilterOptions = false
     let filter: filterType
     
     var body: some View {
@@ -67,8 +68,24 @@ struct ProspectsView: View {
                     Label("Scan", systemImage: "qrcode.viewfinder")
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button {
+                        showingFilterOptions = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "list.bullet")
+                            Text("Filter")
+                        }
+                    }
+                }
+            }
             .sheet(isPresented: $isShowingScanner) {
                 CodeScannerView(codeTypes: [.qr], simulatedData: "Zach Mommaerts\nzmommaerts@gmail.com", completion: handleScan)
+            }
+            .confirmationDialog("Filter By", isPresented: $showingFilterOptions) {
+                Button("Date Added") { prospects.sortByDate() }
+                Button("Name") { prospects.sortByName() }
             }
         }
     }

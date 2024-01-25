@@ -11,6 +11,7 @@ class Prospect: Identifiable, Codable {
     var id = UUID()
     var name = "Anonymous"
     var emailAddress = ""
+    var dateAdded = Date.now
     fileprivate(set) var isContacted = false
 }
 
@@ -34,6 +35,14 @@ class Prospect: Identifiable, Codable {
         if let encoded = try? JSONEncoder().encode(people) {
             try? encoded.write(to: url, options: [.atomic, .completeFileProtection])
         }
+    }
+    
+    func sortByDate() {
+        people.sort { $0.dateAdded > $1.dateAdded }
+    }
+    
+    func sortByName() {
+        people.sort {$0.name < $1.name }
     }
     
     func add(_ prospect: Prospect) {
